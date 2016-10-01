@@ -1,0 +1,41 @@
+<% @meetup_event = Meetup.find(params[:id]) %>
+<% @event_creator = User.where(uid: "#{@meetup_event.user_id}")[0] %>
+<% @attendees = Event.where(meetup_id: params[:id]) %>
+
+<h1><%= @meetup_event.event_name %></h1>
+
+<p><strong> Location: </strong>
+<%= "#{@meetup_event.location}" %></p><br>
+
+<div class="description">
+  <%= "#{@meetup_event.description}" %>
+</div>
+
+<hr>
+
+<h4> Event Coordinator: </h4>
+<p><img src="<%= @event_creator.avatar_url %>" width="35" height="35"><%= " #{@event_creator.username}" %></p><br>
+
+
+<form action="/meetups/<%=@meetup_event.id%>" method="POST" id="add attendee">
+  <button type="submit">Join</button>
+</form>
+
+<h3> Members Attending: </h3>
+  <ul>
+    <% if @attendees.nil? || @attendees.empty? %>
+      <li><%= "No members currently attending event." %></li>
+    <% else %>
+      <% @attendees.each do |attendee| %>
+        <li><img src="<%= attendee.user.avatar_url %>" width="20" height="20"><%= attendee.user.username %></li>
+      <% end %>
+    <% end %>
+  </ul>
+<br>
+
+<hr>
+
+<h4>
+  <a href="/">Go Back to Homepage</a><br>
+  <a href="/meetups/new">Create a New Meetup</a>
+</h4>
